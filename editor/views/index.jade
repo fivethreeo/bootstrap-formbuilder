@@ -1,0 +1,22 @@
+doctype html
+| 
+| <!--[if lt IE 7]><html lang="en" class="ie6"><![endif]-->
+| <!--[if IE 7]><html lang="en" class="ie7"><![endif]-->
+| <!--[if IE 8]><html lang="en" class="ie8"><![endif]-->
+| <!--[if IE 9]><html lang="en" class="ie9"><![endif]-->
+// [if gt IE 9] <!
+
+html(class="", lang="en")
+
+    // <![endif]
+    
+    head
+      title #{title}
+      meta(http-equiv='Content-Type', content='text/html; charset=utf-8')
+      meta(name='viewport', content='width=device-width, initial-scale=1.0')
+      link(rel='stylesheet', href='/stylesheets/editor.css')
+    body
+      .container
+        .row
+          .col-sm-12
+      script(type='text/javascript', src='/javascript/editor.js')
