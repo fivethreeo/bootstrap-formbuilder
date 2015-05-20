@@ -1,6 +1,60 @@
 'use strict';
 
+var basePaths = {
+	src: 'app/assets/',
+	dest: 'public/assets/',
+	bower: 'app/assets/bower_components/'
+};
+
+var paths = {
+	images: {
+		src: basePaths.src + 'images/',
+		dest: basePaths.dest + 'images/'
+	},
+	scripts: {
+		src: basePaths.src + 'js/',
+		dest: basePaths.dest + 'js/'
+	},
+	styles: {
+		src: basePaths.src + 'less/',
+		dest: basePaths.dest + 'css/'
+	},
+	fonts: {
+		src: basePaths.src + 'fonts/',
+		dest: basePaths.dest + 'fonts/'
+	},
+};
+
+var appFiles = {
+	styles: paths.styles.src + '**/*.less',
+	scripts: [paths.scripts.src + 'scripts.js']
+};
+
+var vendorFiles = {
+	styles: [''],
+	scripts: ['']
+};
+
+
 var gulp = require('gulp');
+var es = require('event-stream');
+var gutil = require('gulp-util');
+
+var mainBowerFiles = require('main-bower-files');
+
+var plugins = require("gulp-load-plugins")({
+	pattern: ['gulp-*', 'gulp.*'],
+	replaceString: /\bgulp[\-.]/
+});
+
+// Allows gulp --dev to be run for a more verbose output
+var isProduction = true;
+var sourceMap = false;
+
+if(gutil.env.dev === true) {
+	sourceMap = true;
+	isProduction = false;
+}
 
 gulp.task('clean', function (cb) {
     require('rimraf')('dist', cb);
@@ -9,7 +63,7 @@ gulp.task('clean', function (cb) {
 gulp.task('lint', function () {
     var jshint = require('gulp-jshint');
 
-    return gulp.src('app/scripts/**/*.js')
+    return gulp.src(appFiles.scripts)
         .pipe(jshint())
         .pipe(jshint.reporter('default'));
 });
@@ -19,25 +73,25 @@ gulp.task('images', function () {
     var cache = require('gulp-cache'),
         imagemin = require('gulp-imagemin');
 
-    return gulp.src('app/images/**/*')
+    return gulp.src(paths.images.src)
         .pipe(cache(imagemin({
             progressive: true,
             interlaced: true
         })))
-        .pipe(gulp.dest('dist/images'));
+        .pipe(gulp.dest(paths.images.dest));
 });
 
 gulp.task('fonts', function () {
-    return gulp.src('app/styles/fonts/*')
-        .pipe(gulp.dest('dist/styles/fonts'));
+    return gulp.src(paths.fonts.src)
+        .pipe(gulp.dest(paths.fonts.dest));
 });
 
 gulp.task('misc', function () {
     return gulp.src([
-            'app/*.{ico,png,txt}',
-            'app/.htaccess'
+            basePaths.src + '*.{ico,png,txt}',
+            basePaths.src + '.htaccess'
         ])
-        .pipe(gulp.dest('dist'));
+        .pipe(gulp.dest(basePaths.dest));
 });
 
 gulp.task('html', function () {
@@ -47,23 +101,23 @@ gulp.task('html', function () {
         gulpif = require('gulp-if'),
         assets = useref.assets();
 
-    return gulp.src('app/*.html')
+    return gulp.src(basePaths.src + '*.html')
         .pipe(assets)
         .pipe(gulpif('*.js', uglify()))
         .pipe(gulpif('*.css', minifyCss()))
         .pipe(assets.restore())
         .pipe(useref())
-        .pipe(gulp.dest('dist'));
+        .pipe(gulp.dest(basePaths.dest));
 });
 
-gulp.task('wiredep', function () {
+gulp.task('css', function () {
     var wiredep = require('wiredep').stream;
 
-    gulp.src('app/*.html')
+    gulp.src(basePaths.src + '*.html')
         .pipe(wiredep({
-            directory: 'app/bower_components'
+            directory: basePaths.bower
         }))
-        .pipe(gulp.dest('app'));
+        .pipe(gulp.dest(basePaths.dest));
 });
 
 gulp.task('connect', function () {
@@ -90,13 +144,13 @@ gulp.task('serve', ['connect'], function () {
     require('opn')('http://localhost:9000');
 
     gulp.watch([
-        'app/*.html',
-        'app/styles/**/*.css',
-        'app/scripts/**/*.js',
-        'app/images/**/*'
+        basePaths.dest + '*.html',
+        paths.styles.dest + '*.css',
+        paths.scripts.dest + '*.js',
+        paths.images.dest + '**/*'
     ]).on('change', livereload.changed);
     
-    gulp.watch('bower.json', ['wiredep']);
+    gulp.watch('bower.json', ['css']);
 });
 
 gulp.task('build', ['lint', 'html', 'images', 'fonts', 'misc']);
