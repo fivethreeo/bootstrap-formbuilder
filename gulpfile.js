@@ -101,23 +101,28 @@ gulp.task('html', function () {
         gulpif = require('gulp-if'),
         assets = useref.assets();
 
-    return gulp.src(basePaths.src + '*.html')
+    return gulp.src('app/' + '*.html')
         .pipe(assets)
         .pipe(gulpif('*.js', uglify()))
         .pipe(gulpif('*.css', minifyCss()))
         .pipe(assets.restore())
         .pipe(useref())
-        .pipe(gulp.dest(basePaths.dest));
+        .pipe(gulp.dest('public/'));
 });
 
 gulp.task('css', function () {
     var wiredep = require('wiredep').stream;
 
-    gulp.src(basePaths.src + '*.html')
-        .pipe(wiredep({
-            directory: basePaths.bower
-        }))
-        .pipe(gulp.dest(basePaths.dest));
+    var lessFiles = gulp.src(appFiles.styles)
+    .pipe(plugins.less())
+    .pipe(gulp.dest(basePaths.dest));
+});
+gulp.task('wiredep', function () {
+    var wiredep = require('wiredep').stream;
+
+    gulp.src('app/*.html')
+        .pipe(wiredep())
+        .pipe(gulp.dest('public'));
 });
 
 gulp.task('connect', function () {
@@ -126,8 +131,8 @@ gulp.task('connect', function () {
     var serveIndex = require('serve-index');
     var app = connect()
         .use(require('connect-livereload')({ port: 35729 }))
-        .use(serveStatic('app'))
-        .use(serveIndex('app'));
+        .use(serveStatic(basePaths.dest))
+        .use(serveIndex('public/'));
 
     require('http').createServer(app)
         .listen(9000)
