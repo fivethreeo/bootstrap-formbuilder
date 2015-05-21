@@ -16,8 +16,8 @@ var paths = {
 		dest: basePaths.dest + 'js/'
 	},
 	styles: {
-		src: basePaths.src + 'less/',
-		dest: basePaths.dest + 'css/'
+		src: basePaths.src + 'styles/less/',
+		dest: basePaths.dest + 'styles/'
 	},
 	fonts: {
 		src: basePaths.src + 'fonts/',
@@ -40,7 +40,6 @@ var gulp = require('gulp');
 var es = require('event-stream');
 var gutil = require('gulp-util');
 
-var mainBowerFiles = require('main-bower-files');
 
 var plugins = require("gulp-load-plugins")({
 	pattern: ['gulp-*', 'gulp.*'],
@@ -97,33 +96,32 @@ gulp.task('misc', function () {
 gulp.task('html', function () {
     var uglify = require('gulp-uglify'),
         minifyCss = require('gulp-minify-css'),
+        less = plugins.less,
         useref = require('gulp-useref'),
         gulpif = require('gulp-if'),
-        assets = useref.assets();
+        assets = useref.assets(),
+        wiredep = require('wiredep').stream;
 
     return gulp.src('app/' + '*.html')
+        .pipe(wiredep({
+            exclude:  [ /bootstrap.*\.css$|modernizr/ ], // use less/ move modernizr to top manually
+            directory: 'app/assets/bower_components'
+        }))
         .pipe(assets)
         .pipe(gulpif('*.js', uglify()))
+        .pipe(gulpif('*.css', less({ // *.css for **output** name
+          paths:[
+            paths.styles.src,
+            paths.styles.src + 'mixins/', // for variables.less
+            basePaths.bowern // for all bootstrap.less files
+          ]
+        })))
         .pipe(gulpif('*.css', minifyCss()))
         .pipe(assets.restore())
         .pipe(useref())
-        .pipe(gulp.dest('public/'));
-});
-
-gulp.task('css', function () {
-    var wiredep = require('wiredep').stream;
-
-    var lessFiles = gulp.src(appFiles.styles)
-    .pipe(plugins.less())
-    .pipe(gulp.dest(basePaths.dest));
-});
-gulp.task('wiredep', function () {
-    var wiredep = require('wiredep').stream;
-
-    gulp.src('app/*.html')
-        .pipe(wiredep())
         .pipe(gulp.dest('public'));
 });
+
 
 gulp.task('connect', function () {
     var connect = require('connect');
@@ -131,8 +129,8 @@ gulp.task('connect', function () {
     var serveIndex = require('serve-index');
     var app = connect()
         .use(require('connect-livereload')({ port: 35729 }))
-        .use(serveStatic(basePaths.dest))
-        .use(serveIndex('public/'));
+        .use(serveStatic('public'))
+        .use(serveIndex('public'));
 
     require('http').createServer(app)
         .listen(9000)
@@ -149,16 +147,24 @@ gulp.task('serve', ['connect'], function () {
     require('opn')('http://localhost:9000');
 
     gulp.watch([
-        basePaths.dest + '*.html',
+        'public/' + '*.html',
         paths.styles.dest + '*.css',
         paths.scripts.dest + '*.js',
         paths.images.dest + '**/*'
     ]).on('change', livereload.changed);
     
-    gulp.watch('bower.json', ['css']);
+    gulp.watch([
+        'bower.json',
+        'app/' + '*.html',
+        paths.styles.src + '**/*.less',
+        paths.scripts.src + '*.js'
+    ], ['html']);
+ 
+    gulp.watch([paths.images.src + '**/*'], ['images']);    
 });
 
 gulp.task('build', ['lint', 'html', 'images', 'fonts', 'misc']);
+
 
 gulp.task('default', ['clean'], function () {
     gulp.start('build');

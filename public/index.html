@@ -9,64 +9,74 @@
 
     <!-- Place favicon.ico and apple-touch-icon(s) in the root directory -->
 
-    <link rel="stylesheet" href="styles/vendor.css">
-
     <link rel="stylesheet" href="styles/main.css">
     
-    <script src="scripts/vendor/modernizr.js"></script>
+    <script src="scripts/modernizr.js"></script>
 </head>
 <body>
     <!--[if lt IE 8]>
     <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
-
-    
+    <nav class="navbar navbar-fixed-top navbar-inverse visible-xs visible-sm">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar" class="navbar-toggle collapsed"><span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button><a href="#" class="navbar-brand">Project name</a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="#">Home</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#contact">Contact</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
     <div class="container">
-        <div class="header">
-            <ul class="nav nav-pills pull-right">
-                <li class="active"><a href="#">Home</a></li>
-                <li><a href="#">About</a></li>
-                <li><a href="#">Contact</a></li>
-            </ul>
-            <h3 class="text-muted">typeeditor</h3>
-        </div>
-
-        <div class="jumbotron">
-            <h1>Hello!</h1>
-            <p class="lead">Your app is ready.</p>
-            <p><a class="btn btn-lg btn-success" href="#">Great!</a></p>
-        </div>
-
-        <div class="row marketing">
-            <div class="col-lg-6">
-                <h4>HTML5 Boilerplate</h4>
-                <p>HTML5 Boilerplate is a professional front-end template for building fast, robust, and adaptable web apps or sites.</p>
-                
-                <h4>Bootstrap</h4>
-                <p>Sleek, intuitive, and powerful mobile first front-end framework for faster and easier web development.</p>
-                <h4>Modernizr</h4>
-                <p>Modernizr is an open-source JavaScript library that helps you build the next generation of HTML5 and CSS3-powered websites.</p>
-                
+      <div class="row row-offcanvas row-offcanvas-right">
+        <div class="col-xs-12 col-sm-9">
+          <p class="pull-right visible-xs">
+            <button type="button" data-toggle="offcanvas" class="btn btn-primary btn-xs">Toggle nav</button>
+          </p>          
+          <div class="jumbotron">
+            <h1>Hello, world!</h1>
+            <p>This is an example to show the potential of an offcanvas layout pattern in Bootstrap. Try some responsive-range viewport sizes to see it in action.</p>
+          </div>
+          <div class="row">
+            <div class="col-xs-6 col-lg-4 slidein1">
+              <h2>Heading</h2>
+              <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.</p>
+              <p><a href="#" role="button" class="btn btn-default">View details &raquo;</a></p>
             </div>
-
-            <div class="col-lg-6">
-                <h4>Backbone.js</h4>
-                <p>Backbone.js gives structure to web applications by providing models, collections, views and connects it all to your existing API over a RESTful JSON interface.</p>
-
-                <h4>Underscore.js</h4>
-                <p>Underscore.js is a utility-belt library for JavaScript that provides a lot of the functional programming support</p>
+            <div class="col-xs-6 col-lg-4 slidein2">
+              <h2>Heading</h2>
+              <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.</p>
+              <p><a href="#" role="button" class="btn btn-default">View details &raquo;</a></p>
             </div>
+            <div class="col-xs-6 col-lg-4 slidein3">
+              <h2>Heading</h2>
+              <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.</p>
+              <p><a href="#" role="button" class="btn btn-default">View details &raquo;</a></p>
+            </div>
+            <div class="col-xs-6 col-lg-4 slidein4">
+              <h2>Heading</h2>
+              <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.</p>
+              <p><a href="#" role="button" class="btn btn-default">View details &raquo;</a></p>
+            </div>
+            <div class="col-xs-6 col-lg-4 slidein5">
+              <h2>Heading</h2>
+              <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.</p>
+              <p><a href="#" role="button" class="btn btn-default">View details &raquo;</a></p>
+            </div>
+            <div class="col-xs-6 col-lg-4 slidein6">
+              <h2>Heading</h2>
+              <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.</p>
+              <p><a href="#" role="button" class="btn btn-default">View details &raquo;</a></p>
+            </div>
+          </div>
         </div>
-
-        <div class="footer">
-            <p>Slush - The streaming scaffolding system.</p>
-        </div>
-
+      </div>
     </div>
     
-
-    <script src="scripts/vendor.js"></script>
-
     <script src="scripts/main.js"></script>
 
     <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
@@ -77,6 +87,6 @@
             e.src='//www.google-analytics.com/analytics.js';
             r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
         ga('create','UA-XXXXX-X');ga('send','pageview');
-    </script>
-</body>
+    </script><script type="text/javascript" src="/static/javascript/frontend.js"></script>
+  </body>
 </html>
