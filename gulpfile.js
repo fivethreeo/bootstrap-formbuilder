@@ -37,14 +37,8 @@ var vendorFiles = {
 
 
 var gulp = require('gulp');
-var es = require('event-stream');
 var gutil = require('gulp-util');
 var gh_pages = require('gulp-gh-pages');
-
-var plugins = require("gulp-load-plugins")({
-	pattern: ['gulp-*', 'gulp.*'],
-	replaceString: /\bgulp[\-.]/
-});
 
 // Allows gulp --dev to be run for a more verbose output
 var isProduction = true;
@@ -56,7 +50,7 @@ if(gutil.env.dev === true) {
 }
 
 gulp.task('clean', function (cb) {
-    require('rimraf')('dist', cb);
+    require('rimraf')('public', cb);
 });
 
 gulp.task('lint', function () {
@@ -96,7 +90,7 @@ gulp.task('misc', function () {
 gulp.task('html', function () {
     var uglify = require('gulp-uglify'),
         minifyCss = require('gulp-minify-css'),
-        less = plugins.less,
+        less = require('gulp-less'),
         useref = require('gulp-useref'),
         gulpif = require('gulp-if'),
         assets = useref.assets(),
@@ -109,7 +103,7 @@ gulp.task('html', function () {
         }))
         .pipe(assets)
         .pipe(gulpif('*.js',  isProduction ? uglify() : gutil.noop()))
-        .pipe(gulpif('*.css', less({ // *.css for **output** name
+        .pipe(gulpif('*.css', less({ // *.css for **output** ext
           paths:[
             paths.styles.src,
             paths.styles.src + 'mixins/', // for variables.less
