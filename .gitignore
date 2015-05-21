@@ -1,3 +1,6 @@
 node_modules
 dist
 app/assets/bower_components
+public
+*.log
+.publish
