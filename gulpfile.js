@@ -39,7 +39,7 @@ var vendorFiles = {
 var gulp = require('gulp');
 var es = require('event-stream');
 var gutil = require('gulp-util');
-
+var gh_pages = require('gulp-gh-pages');
 
 var plugins = require("gulp-load-plugins")({
 	pattern: ['gulp-*', 'gulp.*'],
@@ -105,18 +105,18 @@ gulp.task('html', function () {
     return gulp.src('app/' + '*.html')
         .pipe(wiredep({
             exclude:  [ /bootstrap.*\.css$|modernizr/ ], // use less/ move modernizr to top manually
-            directory: 'app/assets/bower_components'
+            directory: basePaths.bower
         }))
         .pipe(assets)
-        .pipe(gulpif('*.js', uglify()))
+        .pipe(gulpif('*.js',  isProduction ? uglify() : gutil.noop()))
         .pipe(gulpif('*.css', less({ // *.css for **output** name
           paths:[
             paths.styles.src,
             paths.styles.src + 'mixins/', // for variables.less
-            basePaths.bowern // for all bootstrap.less files
+            basePaths.bower // for all bootstrap.less files
           ]
         })))
-        .pipe(gulpif('*.css', minifyCss()))
+        .pipe(gulpif('*.css', isProduction ? minifyCss() : gutil.noop()))
         .pipe(assets.restore())
         .pipe(useref())
         .pipe(gulp.dest('public'));
@@ -165,6 +165,10 @@ gulp.task('serve', ['connect'], function () {
 
 gulp.task('build', ['lint', 'html', 'images', 'fonts', 'misc']);
 
+gulp.task('deploy', function() {
+  return gulp.src('public/**/*')
+    .pipe(gh_pages());
+});
 
 gulp.task('default', ['clean'], function () {
     gulp.start('build');
