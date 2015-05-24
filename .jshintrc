@@ -15,5 +15,18 @@
     "undef": true,
     "unused": true,
     "strict": true,
-    "jquery": true
+    "jquery": true,
+    "globals": {
+        "Type": true,
+        "type": true,
+        "_": false,
+        "Backbone": false,
+        "JST": false,
+        "beforeEach": false,
+        "describe": false,
+        "it": false,
+        "assert": true,
+        "expect": true,
+        "should": true
+    }
 }

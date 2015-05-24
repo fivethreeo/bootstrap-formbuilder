@@ -1,13 +1,11 @@
 {
-  "name": "typeeditor",
-  "version": "0.0.1",
-  "private": true,
+  "name": "type",
+  "version": "0.0.0",
   "dependencies": {
-    "bootstrap": "~3.3.0",
-    "jquery": "~1.11.0",
-    "backbone": "~1.1.2",
-    "modernizr": "~2.8.1"
+    "jquery": "~2.1.0",
+    "lodash": "~2.4.1",
+    "backbone": "~1.1.0",
+    "modernizr": "~2.7.1"
   },
-  "devDependencies": {},
-  "main": "app/assets/scripts/main.js"
+  "devDependencies": {}
 }

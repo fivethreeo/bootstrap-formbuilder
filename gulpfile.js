@@ -37,6 +37,8 @@ var vendorFiles = {
 
 
 var gulp = require('gulp');
+require('gulp-grunt')(gulp); // add all the gruntfile tasks to gulp 
+
 var gutil = require('gulp-util');
 var gh_pages = require('gulp-gh-pages');
 
@@ -104,7 +106,12 @@ gulp.task('wiredep', function () {
     var wiredep = require('wiredep').stream;
     var inject = require('gulp-inject');
 
-    var sources = gulp.src(appFiles.scripts, {read: false});
+    var sources = gulp.src([
+      paths.scripts.src + 'models/**/*.js',
+      paths.scripts.src + 'collections/**/*.js',
+      paths.scripts.src + 'views/**/*.js',
+      paths.scripts.src + 'routers/**/*.js'
+    ], {read: false});
 
     return gulp.src('app/' + '*.html')
         .pipe(wiredep({
@@ -165,9 +172,9 @@ gulp.task('serve', ['connect'], function () {
     
     gulp.watch([
         'bower.json',
-        'public/' + '*.html',
+        'app/' + '*.html',
          paths.styles.src + '*.css',
-         paths.scripts.src + '*.js',
+         paths.scripts.src + '**/*.js',
     ], ['wiredep']);
     
     gulp.watch([
