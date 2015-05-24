@@ -16,7 +16,7 @@ var paths = {
 		dest: basePaths.dest + 'js/'
 	},
 	styles: {
-		src: basePaths.src + 'styles/less/',
+		src: basePaths.src + 'styles/',
 		dest: basePaths.dest + 'styles/'
 	},
 	fonts: {
@@ -81,10 +81,34 @@ gulp.task('fonts', function () {
 
 gulp.task('misc', function () {
     return gulp.src([
-            basePaths.src + '*.{ico,png,txt}',
-            basePaths.src + '.htaccess'
+          'app/' + '*.{ico,png,txt}',
         ])
-        .pipe(gulp.dest(basePaths.dest));
+        .pipe(gulp.dest('public'));
+});
+
+gulp.task('less', function () {
+    var less = require('gulp-less');
+    
+    return gulp.src(paths.styles.src + 'less/*.less')
+        .pipe(less({
+          paths:[
+            paths.styles.src,
+            paths.styles.src + 'mixins/',
+            basePaths.bower
+          ]
+        }))
+        .pipe(gulp.dest(paths.styles.src));
+});
+
+gulp.task('wiredep', function () {
+    var wiredep = require('wiredep').stream;
+
+    return gulp.src('app/' + '*.html')
+        .pipe(wiredep({
+            exclude:  [ /bootstrap.*\.css$|modernizr/ ], // use less/ move modernizr to top manually
+            directory: basePaths.bower
+        }))
+        .pipe(gulp.dest('app'));
 });
 
 gulp.task('html', function () {
@@ -93,23 +117,11 @@ gulp.task('html', function () {
         less = require('gulp-less'),
         useref = require('gulp-useref'),
         gulpif = require('gulp-if'),
-        assets = useref.assets(),
-        wiredep = require('wiredep').stream;
+        assets = useref.assets();
 
     return gulp.src('app/' + '*.html')
-        .pipe(wiredep({
-            exclude:  [ /bootstrap.*\.css$|modernizr/ ], // use less/ move modernizr to top manually
-            directory: basePaths.bower
-        }))
         .pipe(assets)
-        .pipe(gulpif('*.js',  isProduction ? uglify() : gutil.noop()))
-        .pipe(gulpif('*.css', less({ // *.css for **output** ext
-          paths:[
-            paths.styles.src,
-            paths.styles.src + 'mixins/', // for variables.less
-            basePaths.bower // for all bootstrap.less files
-          ]
-        })))
+        .pipe(gulpif('*.js', isProduction ? uglify() : gutil.noop()))
         .pipe(gulpif('*.css', isProduction ? minifyCss() : gutil.noop()))
         .pipe(assets.restore())
         .pipe(useref())
@@ -123,6 +135,7 @@ gulp.task('connect', function () {
     var serveIndex = require('serve-index');
     var app = connect()
         .use(require('connect-livereload')({ port: 35729 }))
+        .use(isProduction ? gutil.noop() : serveStatic('app'))
         .use(serveStatic('public'))
         .use(serveIndex('public'));
 
@@ -149,15 +162,23 @@ gulp.task('serve', ['connect'], function () {
     
     gulp.watch([
         'bower.json',
-        'app/' + '*.html',
+        'public/' + '*.html'
+    ], ['wiredep']);
+    
+    gulp.watch([
         paths.styles.src + '**/*.less',
-        paths.scripts.src + '*.js'
-    ], ['html']);
- 
+    ], ['less']);
+  
     gulp.watch([paths.images.src + '**/*'], ['images']);    
 });
 
-gulp.task('build', ['lint', 'html', 'images', 'fonts', 'misc']);
+gulp.task('build', ['clean'], function () {
+    gulp.start('dobuild')
+});
+
+gulp.task('dobuild', ['lint', 'less', 'wiredep', 'images', 'fonts', 'misc'], function () {
+    isProduction ? gulp.start('html') : gutil.noop()
+});
 
 gulp.task('deploy', function() {
   return gulp.src('public/**/*')

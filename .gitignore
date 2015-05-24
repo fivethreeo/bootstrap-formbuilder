@@ -4,3 +4,4 @@ app/assets/bower_components
 public
 *.log
 .publish
+app/assets/styles/main.css
