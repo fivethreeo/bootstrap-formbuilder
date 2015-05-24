@@ -165,7 +165,9 @@ gulp.task('serve', ['connect'], function () {
     
     gulp.watch([
         'bower.json',
-        'public/' + '*.html'
+        'public/' + '*.html',
+         paths.styles.src + '*.css',
+         paths.scripts.src + '*.js',
     ], ['wiredep']);
     
     gulp.watch([
