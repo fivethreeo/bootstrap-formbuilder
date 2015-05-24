@@ -1,5 +1,6 @@
 {
   "name": "typeeditor",
+  "version": "0.0.1",
   "private": true,
   "dependencies": {
     "bootstrap": "~3.3.0",
@@ -7,5 +8,6 @@
     "backbone": "~1.1.2",
     "modernizr": "~2.8.1"
   },
-  "devDependencies": {}
+  "devDependencies": {},
+  "main": "app/assets/scripts/main.js"
 }

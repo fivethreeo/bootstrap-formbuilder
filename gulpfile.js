@@ -12,8 +12,8 @@ var paths = {
 		dest: basePaths.dest + 'images/'
 	},
 	scripts: {
-		src: basePaths.src + 'js/',
-		dest: basePaths.dest + 'js/'
+		src: basePaths.src + 'scripts/',
+		dest: basePaths.dest + 'scripts/'
 	},
 	styles: {
 		src: basePaths.src + 'styles/',
@@ -27,7 +27,7 @@ var paths = {
 
 var appFiles = {
 	styles: paths.styles.src + '**/*.less',
-	scripts: [paths.scripts.src + 'scripts.js']
+	scripts: [paths.scripts.src + '*.js']
 };
 
 var vendorFiles = {
@@ -102,19 +102,22 @@ gulp.task('less', function () {
 
 gulp.task('wiredep', function () {
     var wiredep = require('wiredep').stream;
+    var inject = require('gulp-inject');
+
+    var sources = gulp.src(appFiles.scripts, {read: false});
 
     return gulp.src('app/' + '*.html')
         .pipe(wiredep({
             exclude:  [ /bootstrap.*\.css$|modernizr/ ], // use less/ move modernizr to top manually
             directory: basePaths.bower
         }))
+        .pipe(inject(sources, {relative : true}))
         .pipe(gulp.dest('app'));
 });
 
 gulp.task('html', function () {
     var uglify = require('gulp-uglify'),
         minifyCss = require('gulp-minify-css'),
-        less = require('gulp-less'),
         useref = require('gulp-useref'),
         gulpif = require('gulp-if'),
         assets = useref.assets();

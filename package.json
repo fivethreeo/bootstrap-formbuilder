@@ -1,8 +1,7 @@
 {
   "name": "typeeditor",
   "version": "0.0.0",
-  "dependencies": {},
-  "devDependencies": {
+  "dependencies": {
     "connect": "^3.3.5",
     "connect-livereload": "^0.5.3",
     "gulp": "^3.8.5",
@@ -10,6 +9,7 @@
     "gulp-gh-pages": "^0.5.1",
     "gulp-if": "^1.2.1",
     "gulp-imagemin": "^1.2.1",
+    "gulp-inject": "^1.2.0",
     "gulp-jshint": "^1.8.4",
     "gulp-less": "^3.0.3",
     "gulp-livereload": "^3.8.0",
@@ -21,7 +21,7 @@
     "rimraf": "^2.2.8",
     "serve-index": "^1.6.4",
     "serve-static": "^1.9.3",
-    "wiredep": "^2.0.0"
+    "wiredep": "^2.2.2"
   },
   "engines": {
     "node": ">=0.10.0"
