@@ -1,11 +1,9 @@
-/*global Backbone, $ */
-var app = app || {views:{}};
+
 (function($){
   'use strict';
-  app.views.TypeView = Backbone.View.extend({
+  typeeditorapp.views.TypeEditorView = Backbone.View.extend({
     el : $('.backbone'),
     template : _.template('<p><%= text %></p>'),
-    className : 'typeview',
     events : {
     },
     initialize : function(){
@@ -14,10 +12,10 @@ var app = app || {views:{}};
        this.render();
     },
     render : function(){
-      this.$el.html(this.template({text:'hello'}));
+      this.$el.html(this.template({text:'hello :) reload'}));
       return this;
     }
   });
   
-  var type = new app.views.TypeView();
+  var TypeEditor = new typeeditorapp.views.TypeEditorView();
 })($);

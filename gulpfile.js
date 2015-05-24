@@ -107,10 +107,7 @@ gulp.task('wiredep', function () {
     var inject = require('gulp-inject');
 
     var sources = gulp.src([
-      paths.scripts.src + 'models/**/*.js',
-      paths.scripts.src + 'collections/**/*.js',
-      paths.scripts.src + 'views/**/*.js',
-      paths.scripts.src + 'routers/**/*.js'
+      paths.scripts.src + '**/*.js',
     ], {read: false});
 
     return gulp.src('app/' + '*.html')
@@ -166,8 +163,10 @@ gulp.task('serve', ['connect'], function () {
     gulp.watch([
         'public/' + '*.html',
         paths.styles.dest + '*.css',
-        paths.scripts.dest + '*.js',
-        paths.images.dest + '**/*'
+        paths.scripts.dest + '**/*.js',
+        paths.images.dest + '**/*',
+        paths.styles.src + '*.css',
+        paths.scripts.src + '**/*.js',
     ]).on('change', livereload.changed);
     
     gulp.watch([

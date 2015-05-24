@@ -8,10 +8,10 @@
         dest   : 'app/assets/scripts/',
         prompt : false,
         map : {
-          "backbone/View" : 'views/:dir/',
-          "backbone/Model" : 'models/:dir/',
-          "backbone/Collection" : 'collections/:dir/',
-          "backbone/Route" : 'routers/:dir/'
+          "backbone/View" : ':dir/views/',
+          "backbone/Model" : ':dir/models/',
+          "backbone/Collection" : ':dir/collections/',
+          "backbone/Route" : ':dir/routers/'
         }
       }
     }
