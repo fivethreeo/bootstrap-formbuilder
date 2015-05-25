@@ -93,7 +93,7 @@ gulp.task('fonts', function () {
 
 gulp.task('misc', function () {
     return gulp.src([
-          'app/' + '*.{ico,png,txt}',
+          basePaths.src + '*.{ico,png,txt}',
         ])
         .pipe(gulp.dest(basePaths.dest));
 });
@@ -136,7 +136,7 @@ gulp.task('wiredep', function () {
         removeTags: true
     }
         
-    return gulp.src('app/' + '*.html')
+    return gulp.src(basePaths.src + '*.html')
         .pipe(wiredep(wiredep_options))
         .pipe(inject(sources, sources_options))
         .pipe(inject(templates, inject_template_options))
@@ -169,15 +169,15 @@ gulp.task('connect', function () {
     var connect = require('connect');
     var serveStatic = require('serve-static');
     var serveIndex = require('serve-index');
+    
     var serveApp = isProduction ? gutil.noop() : serveStatic(basePaths.src);
-    var serveTmp = isProduction ? gutil.noop() : serveStatic(basePaths.tmp);
+    var serveWhich= isProduction ? basePaths.dest : basePaths.tmp;
     
     var app = connect()
         .use(require('connect-livereload')({ port: 35729 }))
-        .use(serveTmp)
+        .use(serveStatic(serveWhich))
         .use(serveApp)
-        .use(serveStatic(basePaths.dest))
-        .use(serveIndex(basePaths.dest));
+        .use(serveIndex(serveWhich));
 
     require('http').createServer(app)
         .listen(9000)
@@ -186,11 +186,8 @@ gulp.task('connect', function () {
         });
 });
 
-gulp.task('serve', isProduction ? [] : ['clean'], function () {
-    gulp.start('doserve')
-});
 
-gulp.task('doserve', ['connect'], function () {
+gulp.task('serve', ['connect'], function () {
     var livereload = require('gulp-livereload');
 
     livereload.listen();
@@ -198,14 +195,14 @@ gulp.task('doserve', ['connect'], function () {
     require('opn')('http://localhost:9000');
     
     var listen_globs = isProduction ? [
-        basePaths.dest + '/*.html',
+        basePaths.dest + '*.html',
         paths.styles.dest + '*.css',
         paths.scripts.dest + '**/*.js',
         paths.images.dest + '**/*'
       ] : [       
-        basePaths.src + '/*.html',
-        paths.styles.src + '*.css',
-        paths.scripts.src + '**/*.js',
+        basePaths.tmp + '*.html',
+        paths.styles.tmp + '*.css',
+        paths.scripts.tmp + '**/*.js',
         paths.images.src + '**/*'
     ]
 
@@ -213,7 +210,7 @@ gulp.task('doserve', ['connect'], function () {
     
     gulp.watch([
         'bower.json',
-        basePaths.src + '/' + '*.html',
+        basePaths.src + '*.html',
         paths.styles.src + '*.css',
         paths.scripts.src + '**/*.js',
         paths.scripts.src + '**/*.ejsc'
@@ -223,15 +220,15 @@ gulp.task('doserve', ['connect'], function () {
         paths.styles.src + '**/*.less',
     ], ['less']);
   
-    gulp.watch([paths.images.src + '**/*'], ['images']);    
+    gulp.watch([paths.images.src + '**/*'], ['images']);
 });
 
 gulp.task('build', ['clean'], function () {
-    gulp.start('dobuild')
+    return gulp.start('dobuild')
 });
 
 gulp.task('dobuild', ['lint', 'less', 'wiredep', 'images', 'fonts', 'misc'], function () {
-    isProduction ? gulp.start('html') : gutil.noop()
+    return isProduction ? gulp.start('html') : gutil.noop()
 });
 
 gulp.task('deploy', function() {
