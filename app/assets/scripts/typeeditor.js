@@ -1,2 +1,2 @@
-/*global Backbone, $ */
-var typeeditorapp = {views:{}};
+
+var typeeditorapp = {models:{}, collections:{}, views:{}, routers:{}};
