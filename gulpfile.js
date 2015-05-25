@@ -100,7 +100,7 @@ gulp.task('misc', function () {
 
 gulp.task('less', function () {
     var less = require('gulp-less');
-    
+    var autoprefixer = require('gulp-autoprefixer');
     var lessfiles = gulp.src(paths.styles.src + 'less/*.less')
     
     var less_options = {
@@ -110,9 +110,13 @@ gulp.task('less', function () {
         basePaths.bower
       ]
     }
-    
+    var autoprefixer_options = {
+      browsers: ['last 2 versions'],
+      cascade: false
+    }
     return lessfiles
         .pipe(less(less_options))
+        .pipe(autoprefixer(autoprefixer_options))
         .pipe(gulp.dest(paths.styles.tmp));
 });
 
