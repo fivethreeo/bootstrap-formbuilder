@@ -131,7 +131,10 @@ gulp.task('wiredep', function () {
     
     var wiredep_options= {
       exclude:  [ /bootstrap.*\.css$|modernizr/ ], // use less/ move modernizr to top manually
-      directory: basePaths.bower
+      directory: basePaths.bower,
+      overrides: {
+        'jquery-timing': {main:'jquery-timing.js'}
+      }
     }
 
     var inject_template_options = {
