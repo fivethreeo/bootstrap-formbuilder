@@ -3,7 +3,7 @@
   'use strict';
   typeeditorapp.views.TypeEditorView = Backbone.View.extend({
     el : $('.backbone'),
-    template : _.template($('#typeeditor_main_template').html()),
+    template : _.template(templates.typeeditor_main_template),
     events : {
       'click .nav li a': 'activateTab'
     },
@@ -40,7 +40,7 @@
             tag: 'input',
             type: 'text',
             label: 'Label',
-            placeholder: null
+            placeholder: null,
             choices: null 
         },
         
@@ -65,7 +65,7 @@
     });
 
   typeeditorapp.views.InputView = Backbone.View.extend({
-    template : _.template($('#typeeditor_input_template').html()),
+    template : _.template(templates.typeeditor_input_template||''),
     events : {
     },
     initialize : function(){
@@ -80,7 +80,7 @@
   });      
 
   typeeditorapp.views.InputEditView = Backbone.View.extend({
-    template : _.template($('#typeeditor_input_edit_template').html()),
+    template : _.template(templates.typeeditor_edit_template||''),
     events : {
     },
     initialize : function(){
@@ -94,7 +94,7 @@
   });
   
   typeeditorapp.views.FormControlView = Backbone.View.extend({
-    template : _.template($('#typeeditor_control_template').html()),
+    template : _.template(templates.typeeditor_control_template||''),
     events : {
     },
     initialize : function(){
@@ -108,7 +108,7 @@
   });      
 
   typeeditorapp.views.FormControlEditView = Backbone.View.extend({
-    template : _.template($('#typeeditor_control_edit_template').html()),
+    template : _.template(templates.typeeditor_control_edit_template||''),
     events : {
     },
     initialize : function(){
@@ -119,5 +119,6 @@
     render : function(){
       return this;
     }
-  });          
-})($);
+  });
+  
+})(jQuery);

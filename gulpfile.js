@@ -1,5 +1,27 @@
 'use strict';
 
+var gulp = require('gulp');
+require('gulp-grunt')(gulp); // add all the gruntfile tasks to gulp 
+
+var gutil = require('gulp-util');
+var gh_pages = require('gulp-gh-pages');
+
+// Allows gulp --dev to be run for a more verbose output
+var isProduction = true;
+var sourceMap = false;
+
+var lint = false;
+
+if(gutil.env.dev === true) {
+	sourceMap = true;
+	isProduction = false;
+}
+
+if(gutil.env.lint === true) {
+	lint = true;
+	console.log('dev')
+}
+
 var basePaths = {
 	src: 'app/',
 	dest: 'public/',
@@ -38,23 +60,8 @@ var paths = {
 
 var appFiles = {
 	styles: paths.styles.src + '**/*.less',
-	scripts: [paths.scripts.src + '*.js']
+	scripts: isProduction ? paths.scripts.dest + '**/*.js' : paths.scripts.tmp + '**/*.js'
 };
-
-var gulp = require('gulp');
-require('gulp-grunt')(gulp); // add all the gruntfile tasks to gulp 
-
-var gutil = require('gulp-util');
-var gh_pages = require('gulp-gh-pages');
-
-// Allows gulp --dev to be run for a more verbose output
-var isProduction = true;
-var sourceMap = false;
-
-if(gutil.env.dev === true) {
-	sourceMap = true;
-	isProduction = false;
-}
 
 gulp.task('clean', function (cb) {
   var rimraf = require('rimraf')
@@ -68,8 +75,8 @@ gulp.task('clean', function (cb) {
 gulp.task('lint', function () {
     var jshint = require('gulp-jshint');
 
-    return gulp.src(appFiles.scripts)
-      .pipe(jshint())
+    return (!lint) ? gutil.noop() : gulp.src(appFiles.scripts)
+      .pipe(jshint({multistr:true,camelcase:false}))
       .pipe(jshint.reporter('default'));
 });
 
@@ -120,47 +127,71 @@ gulp.task('less', function () {
         .pipe(gulp.dest(paths.styles.tmp));
 });
 
-gulp.task('wiredep', function () {
-    var wiredep = require('wiredep').stream;
-    var inject = require('gulp-inject');
+gulp.task('ejsc', function () {
+    var ejsc = require('./ejs_inject.js');
+    var ejscfiles = gulp.src(paths.scripts.src + '**/*.ejsc')
+ 
+    return ejscfiles
+        .pipe(ejsc())
+        .pipe(gulp.dest(paths.scripts.tmp));
+});
 
-    var sources = gulp.src([paths.scripts.src + '**/*.js'], {read: false});
-    var templates = gulp.src(paths.scripts.src + '**/*.ejsc'); // ejs collection
+gulp.task('copy_html', function () {
+
+    return gulp.src([basePaths.src + '*.html'])
+      .pipe(gulp.dest(basePaths.tmp))
+});
+
+gulp.task('copy_js', function () {
+
+    return gulp.src([paths.scripts.src + '**/*.js'])
+      .pipe(gulp.dest(paths.scripts.tmp))
+});
+
+gulp.task('wiredep', [ 'less', 'ejsc', 'copy_html', 'copy_js'], function () {
+    var wiredep = require('wiredep').stream;
+    var inject = require('gulp-inject');   
+     
+    var ignorePath = isProduction ? '' : '../app/';
     
+    var sources = gulp.src(paths.scripts.tmp + '**/*.js', {read: false });
     var sources_options = {relative : true}
-    
+
+    var sources_top = gulp.src(basePaths.bower + 'modernizr/modernizr.js', {read: false});
+    var sources_top_options = {
+      relative : true,
+      name: 'head',
+      ignorePath: ignorePath
+    }
+
     var wiredep_options= {
       exclude:  [ /bootstrap.*\.css$|modernizr/ ], // use less/ move modernizr to top manually
       directory: basePaths.bower,
       overrides: {
         'jquery-timing': {main:'jquery-timing.js'}
-      }
+      },
+      ignorePath: ignorePath
     }
 
-    var inject_template_options = {
-        starttag: '<!-- inject:templates:{{ext}} -->',
-        transform: ejsc_transform_function,
-        removeTags: true
-    }
-        
-    return gulp.src(basePaths.src + '*.html')
+    return gulp.src(basePaths.tmp + '*.html')
         .pipe(wiredep(wiredep_options))
+        .pipe(inject(sources_top, sources_top_options))
         .pipe(inject(sources, sources_options))
-        .pipe(inject(templates, inject_template_options))
         .pipe(gulp.dest(basePaths.tmp));
 });
 
-gulp.task('html', function () {
+
+gulp.task('dohtml', function () {
+
     var gulpif = require('gulp-if'),
-        
         uglify = require('gulp-uglify'),
         minify = require('gulp-minify-css'),
         
         useref = require('gulp-useref'),
-        assets = useref.assets({searchPath: basePaths.src}),
+        assets = useref.assets(),
         
-        uglifyIfJs = isProduction ? gulpif('*.js', uglify()) : gutil.noop(),
-        minifyIfCss = isProduction ? gulpif('*.css', minify()) : gutil.noop();
+        uglifyIfJs = gulpif('*.js', uglify()),
+        minifyIfCss = gulpif('*.css', minify());
 
     return gulp.src(basePaths.tmp + '*.html')
         .pipe(assets)
@@ -171,6 +202,13 @@ gulp.task('html', function () {
         .pipe(gulp.dest(basePaths.dest));
 });
 
+gulp.task('posthtml', ['dohtml'], function () {
+  return gulp.start('lint')
+});
+
+gulp.task('html', ['wiredep'], function () {
+    return gulp.start(lint ? 'posthtml' : 'dohtml')
+});
 
 gulp.task('connect', function () {
     var connect = require('connect');
@@ -220,12 +258,9 @@ gulp.task('serve', ['connect'], function () {
         basePaths.src + '*.html',
         paths.styles.src + '*.css',
         paths.scripts.src + '**/*.js',
-        paths.scripts.src + '**/*.ejsc'
-    ], ['wiredep']);
-    
-    gulp.watch([
-        paths.styles.src + '**/*.less',
-    ], ['less']);
+        paths.scripts.src + '**/*.ejsc',
+        paths.styles.src + '**/*.less'
+    ], 'html');
   
     gulp.watch([paths.images.src + '**/*'], ['images']);
 });
@@ -233,9 +268,9 @@ gulp.task('serve', ['connect'], function () {
 gulp.task('build', ['clean'], function () {
     return gulp.start('dobuild')
 });
-
-gulp.task('dobuild', ['lint', 'less', 'wiredep', 'images', 'fonts', 'misc'], function () {
-    return isProduction ? gulp.start('html') : gutil.noop()
+    
+gulp.task('dobuild', ['images', 'fonts', 'misc'], function () {
+    return gulp.start('html')
 });
 
 gulp.task('deploy', function() {
@@ -246,35 +281,3 @@ gulp.task('deploy', function() {
 gulp.task('default', ['clean'], function () {
     gulp.start('build');
 });
-
-var ejsc_transform_function = function (filePath, file) {
-  var path = require('path');
-
-  var basename = path.basename(filePath, '.ejsc');
-  var startTag = ['<!-- template:',  ')([^\\s]*?) (', '-->'], endTag = '<!-- endtemplate -->'
-  
-  function getInjectorTagsRegExp (starttag, endtag) {
-    var re = '(' + makeWhiteSpaceOptional(escapeForRegExp(starttag[0])) + 
-      starttag[1] +
-      makeWhiteSpaceOptional(escapeForRegExp(starttag[2]))+ ')(\\s*)((\\n|\\r|.)*?)(' + 
-      makeWhiteSpaceOptional(escapeForRegExp(endtag)) + ')';
-      
-    return new RegExp(re, 'gi');
-  }
-  
-  function makeWhiteSpaceOptional (str) {
-    return str.replace(/\s+/g, '\\s*');
-  }
-  
-  function escapeForRegExp (str) {
-    return str.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
-  }
-  
-  return file.contents.toString('utf8').replace(
-    getInjectorTagsRegExp(startTag, endTag),
-    function injector (match, starttag1, name, starttag2, indent, content, endtag) {
-      return '<script id="' + basename + '_' + name + '_template" type="text/template">' + indent + content + '</script>'
-    }
-  );
-    
-}
