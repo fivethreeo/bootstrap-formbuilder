@@ -19,7 +19,6 @@ if(gutil.env.dev === true) {
 
 if(gutil.env.lint === true) {
 	lint = true;
-	console.log('dev')
 }
 
 var basePaths = {
@@ -73,9 +72,12 @@ gulp.task('clean', function (cb) {
 });
 
 gulp.task('lint', function () {
+    
+    if (!lint) return;
+    
     var jshint = require('gulp-jshint');
 
-    return (!lint) ? gutil.noop() : gulp.src(appFiles.scripts)
+    return gulp.src(appFiles.scripts)
       .pipe(jshint({multistr:true,camelcase:false}))
       .pipe(jshint.reporter('default'));
 });
@@ -182,7 +184,9 @@ gulp.task('wiredep', [ 'less', 'ejsc', 'copy_html', 'copy_js'], function () {
 
 
 gulp.task('dohtml', function () {
-
+    
+    if (!isProduction) return;
+    
     var gulpif = require('gulp-if'),
         uglify = require('gulp-uglify'),
         minify = require('gulp-minify-css'),
@@ -203,11 +207,11 @@ gulp.task('dohtml', function () {
 });
 
 gulp.task('posthtml', ['dohtml'], function () {
-  return gulp.start('lint')
+  return gulp.start('lint');
 });
 
 gulp.task('html', ['wiredep'], function () {
-    return gulp.start(lint ? 'posthtml' : 'dohtml')
+    return gulp.start('posthtml');
 });
 
 gulp.task('connect', function () {
@@ -230,7 +234,6 @@ gulp.task('connect', function () {
             console.log('Started connect web server on http://localhost:9000.');
         });
 });
-
 
 gulp.task('serve', ['connect'], function () {
     var livereload = require('gulp-livereload');
@@ -260,7 +263,7 @@ gulp.task('serve', ['connect'], function () {
         paths.scripts.src + '**/*.js',
         paths.scripts.src + '**/*.ejsc',
         paths.styles.src + '**/*.less'
-    ], 'html');
+    ], ['html']);
   
     gulp.watch([paths.images.src + '**/*'], ['images']);
 });
