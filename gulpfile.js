@@ -156,7 +156,10 @@ gulp.task('wiredep', [ 'less', 'ejsc', 'copy_html', 'copy_js'], function () {
      
     var ignorePath = isProduction ? '' : '../app/';
     
-    var sources = gulp.src(paths.scripts.tmp + '**/*.js', {read: false });
+    var sources = gulp.src([
+      paths.scripts.tmp + '*.js',
+      paths.scripts.tmp + 'typeeditor/templates/*.js',
+      paths.scripts.tmp + 'typeeditor/views/*.js'], {read: false });
     var sources_options = {relative : true}
 
     var sources_top = gulp.src(basePaths.bower + 'modernizr/modernizr.js', {read: false});

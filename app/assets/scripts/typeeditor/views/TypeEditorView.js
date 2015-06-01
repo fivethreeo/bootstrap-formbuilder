@@ -4,16 +4,13 @@
 
   typeeditorapp.models.BaseType = Backbone.Model.extend({
     defaults: {
+      order: null,
       tag: 'div',
       col_xs: null,
       col_sm: null,
       col_md: null,
       col_lg: null,
       classes: null
-    },
-    
-    initialize: function(){
-      
     },
     
     get_combined: function(keys){
@@ -33,13 +30,17 @@
     
   });
   
+  typeeditorapp.models.BaseType.prototype.sync = function() { return null; };
+  typeeditorapp.models.BaseType.prototype.fetch = function() { return null; };
+  typeeditorapp.models.BaseType.prototype.save = function() { return null; }  
+  
   typeeditorapp.models.InputBaseType = typeeditorapp.models.BaseType.extend({
-    defaults: {
+    defaults: _.extend({}, typeeditorapp.models.BaseType.prototype.defaults, {
       name: 'name',
       size: null,
       add_on_before: null,
       add_on_after: null
-    },
+    }),
     
     initialize: function(){
 
@@ -52,33 +53,31 @@
     }
   });  
   typeeditorapp.models.InputType = typeeditorapp.models.InputBaseType.extend({
-    defaults: {
+
+    defaults: _.extend({}, typeeditorapp.models.InputBaseType.prototype.defaults, {
       tag: 'input',
       type: 'text',
-      placeholder: null
-    },
-    
-    initialize: function(){
-
-    }
-  });  
-  typeeditorapp.models.InputChoiceType = typeeditorapp.models.InputBaseType.extend({
-    defaults: {
-      tag: 'select',
+      placeholder: null,
+      checked: false,
       choices: null
-    },
-    
-    initialize: function(){
-
-    }
-
-  });
+    })
+   
+  });  
   typeeditorapp.collections.InputTypeCollection = Backbone.Collection.extend({
+    model: typeeditorapp.models.InputType,
+    
+		// We keep the Todos in sequential order, despite being saved by unordered
+		// GUID in the database. This generates the next order number for new items.
+		nextOrder: function () {
+			return this.length ? this.last().get('order') + 1 : 1;
+		},
 
-    initialize: function(){
-
-    }
+		// Todos are sorted by their original insertion order.
+		comparator: 'order'
   });
+  
+  typeeditorapp.inputs = new typeeditorapp.collections.InputTypeCollection();
+  
   typeeditorapp.models.FormControlType = typeeditorapp.models.BaseType.extend({
     defaults: {
       label: 'Label',
@@ -91,9 +90,6 @@
   });
   typeeditorapp.collections.FormControlCollection = Backbone.Collection.extend({
 
-    initialize: function(){
-
-    }
   });
   typeeditorapp.models.FormType = typeeditorapp.models.BaseType.extend({
     defaults: {
@@ -108,12 +104,10 @@
     events : {
     },
     initialize : function(){
-      _.bindAll(this, 'render');
-
-     this.render();
     },
+    
     render : function(){
-      this.$el.html(this.template({text:'hello :)  reload'}));
+      this.el = this.template({model: this.model});
       return this;
     }
   });      
@@ -122,12 +116,13 @@
     template : _.template(templates.typeeditor_input_edit_template||''),
     events : {
     },
-    initialize : function(){
-      _.bindAll(this, 'render');
 
-      this.render();
+
+    initialize : function(){
     },
+    
     render : function(){
+      this.el = this.template();
       return this;
     }
   });
@@ -137,11 +132,11 @@
     events : {
     },
     initialize : function(){
-      _.bindAll(this, 'render');
-
      this.render();
     },
+    
     render : function(){
+      this.el = this.template();
       return this;
     }
   });      
@@ -151,11 +146,11 @@
     events : {
     },
     initialize : function(){
-      _.bindAll(this, 'render');
-
       this.render();
     },
+    
     render : function(){
+      this.el = this.template();
       return this;
     }
   });
@@ -164,12 +159,9 @@
     template : _.template(templates.typeeditor_form_template||''),
     events : {
     },
-    initialize : function(){
-      _.bindAll(this, 'render');
-
-     this.render();
-    },
+    
     render : function(){
+      this.el = this.template();
       return this;
     }
   });      
@@ -178,12 +170,9 @@
     template : _.template(templates.typeeditor_form_edit_template||''),
     events : {
     },
-    initialize : function(){
-      _.bindAll(this, 'render');
-
-      this.render();
-    },
+    
     render : function(){
+      this.el = this.template();
       return this;
     }
   });
@@ -195,10 +184,16 @@
       'click .nav li a': 'activateTab'
     },
     initialize : function(){
-      _.bindAll(this, 'render', 'activateTab');
-
        this.render();
+			 this.$formcontrols = $('#formcontrols');
+       this.listenTo(typeeditorapp.inputs, 'add', this.addOne);
     },
+    
+		addOne: function (input) {
+			var view = new typeeditorapp.views.InputView({ model: input });
+			this.$formcontrols.append(view.render().el);
+		},
+
     render : function(){
       this.$el.html(this.template({}));
       return this;
@@ -209,5 +204,10 @@
   });
   
   var TypeEditor = new typeeditorapp.views.TypeEditorView();
+  typeeditorapp.inputs.create({
+    tag: 'input',
+    type: 'text',
+    col_md: 'col-md-12'
+  })
       
 })(jQuery);

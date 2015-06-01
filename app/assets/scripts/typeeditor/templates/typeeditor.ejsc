@@ -6,6 +6,8 @@
         <li role="presentation"><a href="#">Vertical</a></li>
         <li role="presentation"><a href="#">Inline</a></li>
       </ul>
+    <div id="formcontrols">
+    </div> 
     </div> 
     <div class="col-md-6">
       <ul class="nav nav-tabs">
@@ -18,20 +20,12 @@
 <!-- endtemplate -->
 
 <!-- template:input -->
-  <div class="row">
-    <div class="col-md-6">
-      <ul class="nav nav-tabs">
-        <li role="presentation" class="active"><a href="#">Horizontal</a></li>
-        <li role="presentation"><a href="#">Vertical</a></li>
-        <li role="presentation"><a href="#">Inline</a></li>
-      </ul>
-    </div> 
-    <div class="col-md-6">
-      <ul class="nav nav-tabs">
-        <li role="presentation" class="active"><a href="#">Inputs</a></li>
-        <li role="presentation"><a href="#">Radios</a></li>
-        <li role="presentation"><a href="#">Advanced</a></li>
-      </ul>
-    </div> 
+  <div>
+    <% if (model.get('tag') ===  'input') { %>
+    <input type="<%= model.get('type') %>" name="<%= model.get('name') %>" class="<%= model.get_classes() %>" />
+    <% } %>
+    <% if (model.get('tag') ===  'radiomulti') { %>
+    <input type="<%= model.get('type') %>" class="<%= model.get_classes() %>" />
+    <% } %>
   </div>
 <!-- endtemplate -->
