@@ -257,7 +257,7 @@ gulp.task('serve', ['connect'], function () {
         paths.images.src + '**/*'
     ]
 
-    gulp.watch(listen_globs).on('change', livereload.changed);
+    gulp.watch(listen_globs).on('change', function() { setTimeout(livereload.changed, 1000) });
     
     gulp.watch([
         'bower.json',
