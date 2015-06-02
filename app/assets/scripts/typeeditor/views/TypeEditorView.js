@@ -1,71 +1,111 @@
 
 (function($){
   'use strict';
+  
+  app.make_attrs = function(dict) {
+      return _.map(_.pairs(dict), function(pair) {
+        return pair[1] ? pair[0] + '="' + pair[1] + '"' : '';
+    }).join(' ');
+  }
+    
+  app.BaseModel = Backbone.Model.extend({
 
-  typeeditorapp.models.BaseType = Backbone.Model.extend({
+    set_recursive: function(dict) {
+      var that = this;
+      _.mapObject(dict, function(value, key) {
+          if (that.attributes[key] && that.attributes[key].set_recursive) { that.attributes[key].set_recursive(value); }
+          else { that.set(key, value); }
+      })
+      return that;
+      
+    },
+    
+    deepclone: function() {
+      var that = this;
+      var attributes = _.clone(this.attributes);
+    
+      _.map(_.keys(this.attributes), function(key) {
+          if (attributes[key] && attributes[key].deepclone) attributes[key] = that.get(key).deepclone();
+      })
+      
+      return new this.constructor(attributes);
+    }
+    
+  });
+    
+  app.BaseModel.prototype.sync = function() { return null; };
+  app.BaseModel.prototype.fetch = function() { return null; };
+  app.BaseModel.prototype.save = function() { return null; }  
+      
+  app.GridModel = app.BaseModel.extend({
+    
     defaults: {
-      order: null,
-      tag: 'div',
       col_xs: null,
       col_sm: null,
       col_md: null,
       col_lg: null,
-      classes: null
+      col_xs_offset: null,
+      col_sm_offset: null,
+      col_md_offset: null,
+      col_lg_offset: null,
+      col_xs_pull: null,
+      col_sm_pull: null,
+      col_md_pull: null,
+      col_lg_pull: null,
+      col_xs_push: null,
+      col_sm_push: null,
+      col_md_push: null,
+      col_lg_push: null,
+      visible_xs: null,
+      hidden_xs: null,
+      visible_sm: null,
+      hidden_sm: null,
+      visible_md: null,
+      hidden_md: null,
+      visible_lg: null,
+      hidden_lg: null
     },
     
-    get_combined: function(keys){
+    get_grid_classes: function(extra) {
+      var extra = extra || [];
       var that = this;
-      var classes = _.map(keys, function(key) { 
-        return that.get(key);
-      });
-      return _.compact(classes).join(' ');
+      var classes = [];
+      _.mapObject(that.attributes, function(value, key) {
+          if (value && /^col_/.test(key)) {
+             classes.push(key.replace(/_/g, '-') + '-' + value);
+          }
+          else if (value) {
+            classes.push(key.replace(/_/g, '-'));
+          }
+      })
+      return _.union(extra, classes).join(' ');
       
+    }
+
+  });
+  
+  app.BaseElementModel = app.BaseModel.extend({
+    
+    defaults: {
+      tag: 'div',
+      grid: new app.GridModel(),
+      classes: null
     },
 
-    get_classes: function() {
-      return this.get_combined([
-        'col_xs', 'col_sm', 'col_md', 'col_lg',
-        'classes']);
+    get_classes: function(extra) {
+      var extra = extra || [];
+      extra = _.compact(_.union(extra, [this.get('classes')]))
+      return this.get('grid').get_grid_classes(extra);
+    },
+    
+    get_attrs: function(formgroup) {
+      return '';
     }
     
   });
-  
-  typeeditorapp.models.BaseType.prototype.sync = function() { return null; };
-  typeeditorapp.models.BaseType.prototype.fetch = function() { return null; };
-  typeeditorapp.models.BaseType.prototype.save = function() { return null; }  
-  
-  typeeditorapp.models.InputBaseType = typeeditorapp.models.BaseType.extend({
-    defaults: _.extend({}, typeeditorapp.models.BaseType.prototype.defaults, {
-      name: 'name',
-      size: null,
-      add_on_before: null,
-      add_on_after: null
-    }),
     
-    initialize: function(){
+  app.BaseCollection = Backbone.Collection.extend({
 
-    },
-    get_classes: function() {
-      return this.get_combined([
-        'size',
-        'col_xs', 'col_sm', 'col_md', 'col_lg',
-        'classes']);
-    }
-  });  
-  typeeditorapp.models.InputType = typeeditorapp.models.InputBaseType.extend({
-
-    defaults: _.extend({}, typeeditorapp.models.InputBaseType.prototype.defaults, {
-      tag: 'input',
-      type: 'text',
-      placeholder: null,
-      checked: false,
-      choices: null
-    })
-   
-  });  
-  typeeditorapp.collections.InputTypeCollection = Backbone.Collection.extend({
-    model: typeeditorapp.models.InputType,
-    
 		// We keep the Todos in sequential order, despite being saved by unordered
 		// GUID in the database. This generates the next order number for new items.
 		nextOrder: function () {
@@ -73,25 +113,118 @@
 		},
 
 		// Todos are sorted by their original insertion order.
-		comparator: 'order'
+		comparator: 'order',
+    
+    deepclone: function() {
+      return new this.constructor(_.map(this.models, function(m) { return m.deepclone ? m.deepclone() : m.clone(); }));  
+    }
   });
   
-  typeeditorapp.inputs = new typeeditorapp.collections.InputTypeCollection();
+  app.LabelModel= app.BaseElementModel.extend({
+    
+    defaults: _.extend({}, app.BaseElementModel.prototype.defaults, {
+      tag: 'label',
+      text: 'Label'
+    }),
+    
+    get_attrs: function(formgroup) {
+      return app.make_attrs({
+        for: 'id_' +  formgroup.get('name'),
+        class: this.get_classes(['control-label'])
+      });
+    }
+ 
+  });    
   
-  typeeditorapp.models.FormControlType = typeeditorapp.models.BaseType.extend({
-    defaults: {
-      label: 'Label',
-      input: null
+  app.InputWrapModel = app.BaseElementModel.extend({
+    
+    defaults: _.extend({}, app.BaseElementModel.prototype.defaults, {
+      enabled: false
+    }),
+    
+    get_attrs: function(formgroup) {
+      return app.make_attrs({
+        class: this.get_classes()
+      });
+    }
+    
+  });   
+  
+  app.InputGroupModel = app.BaseElementModel.extend({
+    
+    defaults: _.extend({}, app.BaseElementModel.prototype.defaults, {
+      add_on_before: null,
+      add_on_after: null,
+      enabled: false
+    }),
+    
+    get_attrs: function(formgroup) {
+      return app.make_attrs({
+        class: this.get_classes(['input-group'])
+      });
+    }
+    
+  });  
+
+  app.InputModelCollection = app.BaseCollection.extend({
+    model: app.InputModel
+  });
+  
+  app.InputModel = app.BaseElementModel.extend({
+    
+    defaults: _.extend({}, app.BaseElementModel.prototype.defaults, {
+      order: null,
+      tag: 'input',
+      placeholder: null,
+      checked: false,
+      choices: null,
+      size: null,
+      group: new app.InputGroupModel(),
+      label: new app.LabelModel(),
+      wrap: new app.InputWrapModel(),
+      inputs: new app.InputModelCollection()
+    }),
+
+    initialize: function(){
+    },
+    
+    get_attrs: function(formgroup) {
+      return app.make_attrs({
+        id: 'id_' + formgroup.get('name'),
+        class: this.get_classes(['form-control'])
+      });
+    }
+   
+  });  
+
+  app.FormGroupModel = app.BaseElementModel.extend({
+    
+    defaults: _.extend({}, app.BaseElementModel.prototype.defaults, {
+      order: null,
+      name: 'name',
+      type: 'input',
+      input: new app.InputModel()
+    }),
+    
+    get_attrs: function(formgroup) {
+      return app.make_attrs({
+        id: 'div_' + this.get('name'),
+        class: this.get_classes(['form-group'])
+      });
     },
 
     initialize: function(){
-
     }
+    
   });
-  typeeditorapp.collections.FormControlCollection = Backbone.Collection.extend({
-
+  
+  app.FormGroupCollection = app.BaseCollection.extend({
+    model: app.FormGroupModel
   });
-  typeeditorapp.models.FormType = typeeditorapp.models.BaseType.extend({
+  
+  app.formgroups = new app.FormGroupCollection();
+  
+  app.FormType = app.BaseElementModel.extend({
     defaults: {
     },
     
@@ -99,75 +232,84 @@
 
     }
   });
-  typeeditorapp.views.InputView = Backbone.View.extend({
-    template : _.template(templates.typeeditor_input_template||''),
+
+  app.InputEditView = Backbone.View.extend({
+    
+    template : _.template(templates.typeeditor_input_edit_template||''),
+    
     events : {
     },
+
     initialize : function(){
     },
     
     render : function(){
+      this.el = this.template();
+      return this;
+    }
+    
+  });
+  
+  app.FormGroupView = Backbone.View.extend({
+    
+    template : _.template(templates.typeeditor_formgroup_template||''),
+    
+    events : {
+    },
+    
+    initialize : function(){
+    },
+    
+    render : function(){
+
       this.el = this.template({model: this.model});
       return this;
     }
+    
   });      
 
-  typeeditorapp.views.InputEditView = Backbone.View.extend({
-    template : _.template(templates.typeeditor_input_edit_template||''),
+  app.FormGroupEditView = Backbone.View.extend({
+    
+    el : '#edit-area',
+    
+    template : _.template(templates.typeeditor_formgroup_edit_template||''),
+    
     events : {
-    },
-
-
-    initialize : function(){
     },
     
-    render : function(){
-      this.el = this.template();
-      return this;
-    }
-  });
-  
-  typeeditorapp.views.FormControlView = Backbone.View.extend({
-    template : _.template(templates.typeeditor_formcontrol_template||''),
-    events : {
-    },
-    initialize : function(){
-     this.render();
-    },
-    
-    render : function(){
-      this.el = this.template();
-      return this;
-    }
-  });      
-
-  typeeditorapp.views.FormControlEditView = Backbone.View.extend({
-    template : _.template(templates.typeeditor_formcontrol_edit_template||''),
-    events : {
-    },
     initialize : function(){
       this.render();
     },
     
     render : function(){
-      this.el = this.template();
+      console.log(this.$el.html())
+      this.$el.html(this.template());
+      console.log(this.$el.html())
       return this;
     }
+    
   });
   
-  typeeditorapp.views.FormView = Backbone.View.extend({
+  app.FormView = Backbone.View.extend({
+    
+    el : '.backbone',
+    
     template : _.template(templates.typeeditor_form_template||''),
+    
     events : {
     },
     
     render : function(){
-      this.el = this.template();
+      this.$el.html(this.template());
       return this;
     }
+    
   });      
 
-  typeeditorapp.views.FormEditView = Backbone.View.extend({
+  app.FormEditView = Backbone.View.extend({
+    
     template : _.template(templates.typeeditor_form_edit_template||''),
+    
     events : {
     },
     
@@ -177,37 +319,58 @@
     }
   });
   
-  typeeditorapp.views.TypeEditorView = Backbone.View.extend({
-    el : $('.backbone'),
+  app.TypeEditorView = Backbone.View.extend({
+    
+    el : '.backbone',
+    
     template : _.template(templates.typeeditor_main_template),
+    
     events : {
       'click .nav li a': 'activateTab'
     },
+    
     initialize : function(){
-       this.render();
-			 this.$formcontrols = $('#formcontrols');
-       this.listenTo(typeeditorapp.inputs, 'add', this.addOne);
+      this.render();
+      this.$form = $('form#form');
+      this.listenTo(app.formgroups, 'add', this.addOne);
     },
     
-		addOne: function (input) {
-			var view = new typeeditorapp.views.InputView({ model: input });
-			this.$formcontrols.append(view.render().el);
+		addOne: function (model) {
+			var view = new app.FormGroupView({ model: model });
+			this.$form.append(view.render().el);
 		},
 
     render : function(){
       this.$el.html(this.template({}));
+      new app.FormGroupEditView();
       return this;
     },
+    
     activateTab : function(event){
-      $(event.currentTarget).tab('show');
+      this.$form.removeClass('form-horizontal form-vertical form-inline');
+      this.$form.addClass($(event.currentTarget).tab('show').data('class'));
     }
+    
   });
   
-  var TypeEditor = new typeeditorapp.views.TypeEditorView();
-  typeeditorapp.inputs.create({
-    tag: 'input',
-    type: 'text',
-    col_md: 'col-md-12'
-  })
-      
+  var TypeEditor = new app.TypeEditorView();
+  
+  var group = new app.FormGroupModel();
+  
+  var group2 = group.deepclone().set_recursive({
+    input: { 
+      wrap: { enabled: true, grid: { col_md: 3 } },
+      label: { grid: { col_md: 3 } }
+    }
+  });
+  var group3 = group2.deepclone().set_recursive({
+    input:{
+      wrap:{
+        enabled:true
+      }
+    }
+  });
+  app.formgroups.add(group);  
+  app.formgroups.add(group2); 
+  
 })(jQuery);

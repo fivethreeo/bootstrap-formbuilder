@@ -1,2 +1,2 @@
 
-var typeeditorapp = {models:{}, collections:{}, views:{}, routers:{}};
+var app = {};

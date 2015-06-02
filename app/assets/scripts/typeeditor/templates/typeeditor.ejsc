@@ -2,30 +2,102 @@
   <div class="row">
     <div class="col-md-6">
       <ul class="nav nav-tabs">
-        <li role="presentation" class="active"><a href="#">Horizontal</a></li>
-        <li role="presentation"><a href="#">Vertical</a></li>
-        <li role="presentation"><a href="#">Inline</a></li>
+        <li role="presentation" class="active"><a href="#" data-class="form-horizontal">Horizontal</a></li>
+        <li role="presentation"><a href="#" data-class="form-vertical">Vertical</a></li>
+        <li role="presentation"><a href="#" data-class="form-inline">Inline</a></li>
       </ul>
-    <div id="formcontrols">
-    </div> 
-    </div> 
-    <div class="col-md-6">
-      <ul class="nav nav-tabs">
-        <li role="presentation" class="active"><a href="#">Inputs</a></li>
-        <li role="presentation"><a href="#">Radios</a></li>
-        <li role="presentation"><a href="#">Advanced</a></li>
-      </ul>
+    <form id="form">
+    </form> 
+    </div>
+    <div id="edit-area" class="col-md-6">
     </div> 
   </div>
 <!-- endtemplate -->
 
-<!-- template:input -->
-  <div>
-    <% if (model.get('tag') ===  'input') { %>
-    <input type="<%= model.get('type') %>" name="<%= model.get('name') %>" class="<%= model.get_classes() %>" />
-    <% } %>
-    <% if (model.get('tag') ===  'radiomulti') { %>
-    <input type="<%= model.get('type') %>" class="<%= model.get_classes() %>" />
+<!-- template:formgroup -->
+  <%
+  var input = model.get('input');
+  var label = input.get('label');
+  var group = input.get('group');
+  var wrap = input.get('wrap');
+  %>
+  <div <%= model.get_attrs() %>>
+    
+    <label <%= label.get_attrs(model) %>><%= label.get('text') %></label>
+    
+    <% if (wrap.get('enabled')) { %> <div <%= wrap.get_attrs(model) %>> <% } %>
+
+      <% if (input.get('tag') ===  'input') { %>
+        
+        <% if (group.get('enabled')) { %> <div <%= group.get_attrs(model) %>> <% } %>
+
+          <input <%= input.get_attrs(model) %> />
+          
+        <% if (group.get('enabled')) { %> </div> <% } %>
+        
+      <% if (wrap.get('enabled')) { %> </div> <% } %>
+      
     <% } %>
   </div>
+<!-- endtemplate -->
+
+<!-- template:formgroup_edit -->
+<form id="edit-form" class="form-inline">
+  <fieldset>
+    <legend>Form group</legend>
+    <div class="row">
+
+      <div id="div_name" class="form-group form-group-sm">
+        <label class="col-md-3" for="id_name" class="control-label">Name</label>
+        <div class="col-md-3"><input id="id_name" name="name" class="form-control"></div>
+      </div>
+      
+      <div id="div_type" class="form-group form-group-sm">
+        
+        <label class="col-md-3" for="id_type" class="control-label">Type</label>
+        <div class="col-md-3">
+          <select id="id_type" name="type" class="form-control">
+            <option value="text">Text</option>
+            <option value="email">Email</option>
+            <option value="checkbox">Checkbox</option>
+            <option value="radio">Radio</option>
+            <option value="checkboxmultiple">Checkbox multiple</option>
+            <option value="radiomultiple">Radio multiple</option>
+            <option value="select">Select</option>
+            <option value="selectmultiple">Select multiple</option>
+          </select>
+        </div>  
+      </div>
+    </div>
+  </fieldset>
+  
+  <fieldset>
+    
+  <legend>Label</legend>
+    <div class="row">
+    
+      <div id="div_label" class="form-group form-group-sm">
+        <label class="col-md-3" for="id_label" class="control-label">Label</label>
+        <div class="col-md-3"><input id="id_label" name="label" class="form-control"></div>
+      </div>
+    
+      <div id="div_classes" class="form-group form-group-sm">
+        <label class="col-md-3" for="id_classes" class="control-label">Classes</label>
+        <div class="col-md-3"><input id="id_classes" name="classes" class="form-control"></div>
+      </div>
+    </div>
+    <fieldset class="col-md-11 col-md-offset-1">
+      <legend>Label grid</legend>
+    </fieldset>
+  </fieldset>
+  <fieldset>
+    <legend>Input</legend>
+    <fieldset class="col-md-11 col-md-offset-1">
+      <legend>Input group</legend>
+    </fieldset>
+    <fieldset class="col-md-11 col-md-offset-1">
+      <legend>Input grid</legend>
+    </fieldset>
+  </fieldset>
+</form>
 <!-- endtemplate -->
