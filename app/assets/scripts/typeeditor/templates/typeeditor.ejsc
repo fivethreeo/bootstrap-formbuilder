@@ -42,61 +42,653 @@
 <!-- endtemplate -->
 
 <!-- template:formgroup_edit -->
-<form id="edit-form" class="form-inline">
+<form id="edit-form" class="form-horizontal">
   <fieldset>
     <legend>Form group</legend>
-    <div class="row">
-
-      <div id="div_name" class="form-group form-group-sm">
-        <label class="col-md-3" for="id_name" class="control-label">Name</label>
-        <div class="col-md-3"><input id="id_name" name="name" class="form-control"></div>
-      </div>
-      
-      <div id="div_type" class="form-group form-group-sm">
-        
-        <label class="col-md-3" for="id_type" class="control-label">Type</label>
-        <div class="col-md-3">
-          <select id="id_type" name="type" class="form-control">
-            <option value="text">Text</option>
-            <option value="email">Email</option>
-            <option value="checkbox">Checkbox</option>
-            <option value="radio">Radio</option>
-            <option value="checkboxmultiple">Checkbox multiple</option>
-            <option value="radiomultiple">Radio multiple</option>
-            <option value="select">Select</option>
-            <option value="selectmultiple">Select multiple</option>
-          </select>
+    
+        <div id="div_name" class="form-group">
+          <label for="id_name" class="control-label col-md-1">Name</label>
+          <div class="col-md-5">
+            <input id="id_name" name="name" class="form-control" />
+          </div>
+          <label for="id_type" class="control-label col-md-1">Type</label>
+          <div class="col-md-5">
+            <select id="id_type" name="type" class="form-control" disabled>
+              <option value="text">Text</option>
+              <option value="email">Email</option>
+              <option value="checkbox">Checkbox</option>
+              <option value="radio">Radio</option>
+              <option value="checkboxmultiple">Checkbox multiple</option>
+              <option value="radiomultiple">Radio multiple</option>
+              <option value="select">Select</option>
+              <option value="selectmultiple">Select multiple</option>
+            </select>
+            <p class="help-block">Create with type instead.</p>
+          </div>
         </div>  
-      </div>
-    </div>
+
+    
   </fieldset>
   
   <fieldset>
     
   <legend>Label</legend>
-    <div class="row">
     
-      <div id="div_label" class="form-group form-group-sm">
-        <label class="col-md-3" for="id_label" class="control-label">Label</label>
-        <div class="col-md-3"><input id="id_label" name="label" class="form-control"></div>
-      </div>
-    
-      <div id="div_classes" class="form-group form-group-sm">
-        <label class="col-md-3" for="id_classes" class="control-label">Classes</label>
-        <div class="col-md-3"><input id="id_classes" name="classes" class="form-control"></div>
-      </div>
-    </div>
-    <fieldset class="col-md-11 col-md-offset-1">
+        <div class="form-group">
+          <label for="id_label" class="control-label col-md-1">Label</label>
+          <div class="col-md-5">
+            <input id="id_label" name="label" class="form-control" />
+          </div>
+          <label for="id_classes" class="control-label col-md-2">Classes</label>
+          <div class="col-md-4">
+            <input id="id_classes" name="classes" class="form-control">
+            <p class="help-block">Space separated.</p>
+          </div>
+        </div>
+
+    <fieldset>
       <legend>Label grid</legend>
+      <div id="div_col_xs" class="form-group form-group-sm">
+        <label for="id_col_xs" class="control-label col-md-1">xs:</label>
+        <div class="col-md-2">
+          <select id="id_col_xs" name="col_xs" class="form-control">
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+            <option value="11">11</option>
+            <option value="12">12</option>
+          </select>
+        </div>
+        <label for="id_col_xs_push" class="control-label col-md-1">Push</label>
+        <div class="col-md-2">
+          <select id="id_col_xs_push" name="col_xs_push" class="form-control">
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+            <option value="11">11</option>
+            <option value="12">12</option>
+          </select>
+        </div>
+        <label for="id_col_xs_pull" class="control-label col-md-1">Pull</label>
+        <div class="col-md-2">
+          <select id="id_col_xs_pull" name="col_xs_pull" class="form-control">
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+            <option value="11">11</option>
+            <option value="12">12</option>
+          </select>
+        </div>
+        <label for="id_col_xs_offset" class="control-label col-md-1">Offset</label>
+        <div class="col-md-2">
+          <select id="id_col_xs_offset" name="col_xs_offset" class="form-control">
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+            <option value="11">11</option>
+            <option value="12">12</option>
+          </select>
+        </div>
+      </div>
+      <div id="div_col_sm" class="form-group form-group-sm">
+        <label for="id_col_sm" class="control-label col-md-1">sm:</label>
+        <div class="col-md-2">
+          <select id="id_col_sm" name="col_sm" class="form-control">
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+            <option value="11">11</option>
+            <option value="12">12</option>
+          </select>
+        </div>
+        <label for="id_col_sm_push" class="control-label col-md-1">Push</label>
+        <div class="col-md-2">
+          <select id="id_col_sm_push" name="col_sm_push" class="form-control">
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+            <option value="11">11</option>
+            <option value="12">12</option>
+          </select>
+        </div>
+        <label for="id_col_sm_pull" class="control-label col-md-1">Pull</label>
+        <div class="col-md-2">
+          <select id="id_col_sm_pull" name="col_sm_pull" class="form-control">
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+            <option value="11">11</option>
+            <option value="12">12</option>
+          </select>
+        </div>
+        <label for="id_col_sm_offset" class="control-label col-md-1">Offset</label>
+        <div class="col-md-2">
+          <select id="id_col_sm_offset" name="col_sm_offset" class="form-control">
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+            <option value="11">11</option>
+            <option value="12">12</option>
+          </select>
+        </div>
+      </div>
+      <div id="div_col_md" class="form-group form-group-sm">
+        <label for="id_col_md" class="control-label col-md-1">md:</label>
+        <div class="col-md-2">
+          <select id="id_col_md" name="col_md" class="form-control">
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+            <option value="11">11</option>
+            <option value="12">12</option>
+          </select>
+        </div>
+        <label for="id_col_md_push" class="control-label col-md-1">Push</label>
+        <div class="col-md-2">
+          <select id="id_col_md_push" name="col_md_push" class="form-control">
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+            <option value="11">11</option>
+            <option value="12">12</option>
+          </select>
+        </div>
+        <label for="id_col_md_pull" class="control-label col-md-1">Pull</label>
+        <div class="col-md-2">
+          <select id="id_col_md_pull" name="col_md_pull" class="form-control">
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+            <option value="11">11</option>
+            <option value="12">12</option>
+          </select>
+        </div>
+        <label for="id_col_md_offset" class="control-label col-md-1">Offset</label>
+        <div class="col-md-2">
+          <select id="id_col_md_offset" name="col_md_offset" class="form-control">
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+            <option value="11">11</option>
+            <option value="12">12</option>
+          </select>
+        </div>
+      </div>
+      <div id="div_col_lg" class="form-group form-group-sm">
+        <label for="id_col_lg" class="control-label col-md-1">lg:</label>
+        <div class="col-md-2">
+          <select id="id_col_lg" name="col_lg" class="form-control">
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+            <option value="11">11</option>
+            <option value="12">12</option>
+          </select>
+        </div>
+        <label for="id_col_lg_push" class="control-label col-md-1">Push</label>
+        <div class="col-md-2">
+          <select id="id_col_lg_push" name="col_lg_push" class="form-control">
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+            <option value="11">11</option>
+            <option value="12">12</option>
+          </select>
+        </div>
+        <label for="id_col_lg_pull" class="control-label col-md-1">Pull</label>
+        <div class="col-md-2">
+          <select id="id_col_lg_pull" name="col_lg_pull" class="form-control">
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+            <option value="11">11</option>
+            <option value="12">12</option>
+          </select>
+        </div>
+        <label for="id_col_lg_offset" class="control-label col-md-1">Offset</label>
+        <div class="col-md-2">
+          <select id="id_col_lg_offset" name="col_lg_offset" class="form-control">
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+            <option value="11">11</option>
+            <option value="12">12</option>
+          </select>
+        </div>
+      </div>
     </fieldset>
   </fieldset>
   <fieldset>
     <legend>Input</legend>
-    <fieldset class="col-md-11 col-md-offset-1">
+    <fieldset>
       <legend>Input group</legend>
     </fieldset>
-    <fieldset class="col-md-11 col-md-offset-1">
+    <fieldset>
       <legend>Input grid</legend>
+      <div id="div_col_xs" class="form-group form-group-sm">
+        <label for="id_col_xs" class="control-label col-md-1">xs:</label>
+        <div class="col-md-2">
+          <select id="id_col_xs" name="col_xs" class="form-control">
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+            <option value="11">11</option>
+            <option value="12">12</option>
+          </select>
+        </div>
+        <label for="id_col_xs_push" class="control-label col-md-1">Push</label>
+        <div class="col-md-2">
+          <select id="id_col_xs_push" name="col_xs_push" class="form-control">
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+            <option value="11">11</option>
+            <option value="12">12</option>
+          </select>
+        </div>
+        <label for="id_col_xs_pull" class="control-label col-md-1">Pull</label>
+        <div class="col-md-2">
+          <select id="id_col_xs_pull" name="col_xs_pull" class="form-control">
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+            <option value="11">11</option>
+            <option value="12">12</option>
+          </select>
+        </div>
+        <label for="id_col_xs_offset" class="control-label col-md-1">Offset</label>
+        <div class="col-md-2">
+          <select id="id_col_xs_offset" name="col_xs_offset" class="form-control">
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+            <option value="11">11</option>
+            <option value="12">12</option>
+          </select>
+        </div>
+      </div>
+      <div id="div_col_sm" class="form-group form-group-sm">
+        <label for="id_col_sm" class="control-label col-md-1">sm:</label>
+        <div class="col-md-2">
+          <select id="id_col_sm" name="col_sm" class="form-control">
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+            <option value="11">11</option>
+            <option value="12">12</option>
+          </select>
+        </div>
+        <label for="id_col_sm_push" class="control-label col-md-1">Push</label>
+        <div class="col-md-2">
+          <select id="id_col_sm_push" name="col_sm_push" class="form-control">
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+            <option value="11">11</option>
+            <option value="12">12</option>
+          </select>
+        </div>
+        <label for="id_col_sm_pull" class="control-label col-md-1">Pull</label>
+        <div class="col-md-2">
+          <select id="id_col_sm_pull" name="col_sm_pull" class="form-control">
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+            <option value="11">11</option>
+            <option value="12">12</option>
+          </select>
+        </div>
+        <label for="id_col_sm_offset" class="control-label col-md-1">Offset</label>
+        <div class="col-md-2">
+          <select id="id_col_sm_offset" name="col_sm_offset" class="form-control">
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+            <option value="11">11</option>
+            <option value="12">12</option>
+          </select>
+        </div>
+      </div>
+      <div id="div_col_md" class="form-group form-group-sm">
+        <label for="id_col_md" class="control-label col-md-1">md:</label>
+        <div class="col-md-2">
+          <select id="id_col_md" name="col_md" class="form-control">
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+            <option value="11">11</option>
+            <option value="12">12</option>
+          </select>
+        </div>
+        <label for="id_col_md_push" class="control-label col-md-1">Push</label>
+        <div class="col-md-2">
+          <select id="id_col_md_push" name="col_md_push" class="form-control">
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+            <option value="11">11</option>
+            <option value="12">12</option>
+          </select>
+        </div>
+        <label for="id_col_md_pull" class="control-label col-md-1">Pull</label>
+        <div class="col-md-2">
+          <select id="id_col_md_pull" name="col_md_pull" class="form-control">
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+            <option value="11">11</option>
+            <option value="12">12</option>
+          </select>
+        </div>
+        <label for="id_col_md_offset" class="control-label col-md-1">Offset</label>
+        <div class="col-md-2">
+          <select id="id_col_md_offset" name="col_md_offset" class="form-control">
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+            <option value="11">11</option>
+            <option value="12">12</option>
+          </select>
+        </div>
+      </div>
+      <div id="div_col_lg" class="form-group form-group-sm">
+        <label for="id_col_lg" class="control-label col-md-1">lg:</label>
+        <div class="col-md-2">
+          <select id="id_col_lg" name="col_lg" class="form-control">
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+            <option value="11">11</option>
+            <option value="12">12</option>
+          </select>
+        </div>
+        <label for="id_col_lg_push" class="control-label col-md-1">Push</label>
+        <div class="col-md-2">
+          <select id="id_col_lg_push" name="col_lg_push" class="form-control">
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+            <option value="11">11</option>
+            <option value="12">12</option>
+          </select>
+        </div>
+        <label for="id_col_lg_pull" class="control-label col-md-1">Pull</label>
+        <div class="col-md-2">
+          <select id="id_col_lg_pull" name="col_lg_pull" class="form-control">
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+            <option value="11">11</option>
+            <option value="12">12</option>
+          </select>
+        </div>
+        <label for="id_col_lg_offset" class="control-label col-md-1">Offset</label>
+        <div class="col-md-2">
+          <select id="id_col_lg_offset" name="col_lg_offset" class="form-control">
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+            <option value="11">11</option>
+            <option value="12">12</option>
+          </select>
+        </div>
+      </div>
     </fieldset>
   </fieldset>
 </form>
