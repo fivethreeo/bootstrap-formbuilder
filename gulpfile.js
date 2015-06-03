@@ -57,6 +57,11 @@ var paths = {
 	}
 };
 
+var appFiles = {
+	styles: paths.styles.src + '**/*.less',
+	scripts: isProduction ? paths.scripts.dest + '**/*.js' : paths.scripts.tmp + '**/*.js'
+};
+
 gulp.task('clean', function (cb) {
   var rimraf = require('rimraf')
     
@@ -72,7 +77,7 @@ gulp.task('lint', function () {
     
     var jshint = require('gulp-jshint');
 
-    return gulp.src(isProduction ? paths.scripts.dest + '**/*.js' : paths.scripts.tmp + '**/*.js')
+    return gulp.src(appFiles.scripts)
       .pipe(jshint({multistr:true,camelcase:false}))
       .pipe(jshint.reporter('default'));
 });
@@ -153,8 +158,8 @@ gulp.task('wiredep', [ 'less', 'ejsc', 'copy_html', 'copy_js'], function () {
     
     var sources = gulp.src([
       paths.scripts.tmp + '*.js',
-      paths.scripts.tmp + 'typeeditor/templates/*.js',
-      paths.scripts.tmp + 'typeeditor/views/*.js'], {read: false });
+      paths.scripts.tmp + 'formbuilder/templates/*.js',
+      paths.scripts.tmp + 'formbuilder/views/*.js'], {read: false });
     var sources_options = {relative : true}
 
     var sources_top = gulp.src(basePaths.bower + 'modernizr/modernizr.js', {read: false});
@@ -254,7 +259,7 @@ gulp.task('serve', ['connect'], function () {
 
     var delay_livereload = function(timeout) {
       return function(vinyl) {
-        setTimeout(function() { livereload.changed(vinyl) }, timeout);
+        setTimeout(function() { livereload.changed(vinyl)}, timeout)
       };
     }
 

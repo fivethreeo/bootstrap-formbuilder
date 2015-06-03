@@ -1,6 +1,6 @@
 {
-  "name": "type",
-  "version": "0.0.0",
+  "name": "bootstrap-formbuilder",
+  "version": "0.0.1",
   "dependencies": {
     "jquery": "~2.1.0",
     "backbone": "~1.1.0",

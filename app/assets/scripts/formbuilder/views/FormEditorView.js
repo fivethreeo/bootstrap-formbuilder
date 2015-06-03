@@ -235,7 +235,7 @@
 
   app.InputEditView = Backbone.View.extend({
     
-    template : _.template(templates.typeeditor_input_edit_template||''),
+    template : _.template(templates.formbuilder_input_edit_template||''),
     
     events : {
     },
@@ -252,7 +252,7 @@
   
   app.FormGroupView = Backbone.View.extend({
     
-    template : _.template(templates.typeeditor_formgroup_template||''),
+    template : _.template(templates.formbuilder_formgroup_template||''),
     
     events : {
     },
@@ -272,7 +272,7 @@
     
     el : '#edit-area',
     
-    template : _.template(templates.typeeditor_formgroup_edit_template||''),
+    template : _.template(templates.formbuilder_formgroup_edit_template||''),
     
     events : {
     },
@@ -294,7 +294,7 @@
     
     el : '.backbone',
     
-    template : _.template(templates.typeeditor_form_template||''),
+    template : _.template(templates.formbuilder_form_template||''),
     
     events : {
     },
@@ -308,7 +308,7 @@
 
   app.FormEditView = Backbone.View.extend({
     
-    template : _.template(templates.typeeditor_form_edit_template||''),
+    template : _.template(templates.formbuilder_form_edit_template||''),
     
     events : {
     },
@@ -319,11 +319,11 @@
     }
   });
   
-  app.TypeEditorView = Backbone.View.extend({
+  app.FormBuilderView = Backbone.View.extend({
     
     el : '.backbone',
     
-    template : _.template(templates.typeeditor_main_template),
+    template : _.template(templates.formbuilder_main_template),
     
     events : {
       'click .nav li a': 'activateTab'
@@ -353,7 +353,7 @@
     
   });
   
-  var TypeEditor = new app.TypeEditorView();
+  var FormBuilder = new app.FormBuilderView();
   
   var group = new app.FormGroupModel();
   
