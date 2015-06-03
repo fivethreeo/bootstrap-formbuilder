@@ -57,11 +57,6 @@ var paths = {
 	}
 };
 
-var appFiles = {
-	styles: paths.styles.src + '**/*.less',
-	scripts: isProduction ? paths.scripts.dest + '**/*.js' : paths.scripts.tmp + '**/*.js'
-};
-
 gulp.task('clean', function (cb) {
   var rimraf = require('rimraf')
     
@@ -77,7 +72,7 @@ gulp.task('lint', function () {
     
     var jshint = require('gulp-jshint');
 
-    return gulp.src(appFiles.scripts)
+    return gulp.src(isProduction ? paths.scripts.dest + '**/*.js' : paths.scripts.tmp + '**/*.js')
       .pipe(jshint({multistr:true,camelcase:false}))
       .pipe(jshint.reporter('default'));
 });

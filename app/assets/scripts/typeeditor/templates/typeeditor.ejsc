@@ -346,26 +346,53 @@
   <fieldset>
   
     <legend>Form group</legend>
-    
-      <label for="id_name" class="control-label col-md-1">Name</label>
-      <div class="col-md-5">
-        <input id="id_name" name="name" class="form-control" />
-      </div>
-      <label for="id_type" class="control-label col-md-1">Type</label>
-      <div class="col-md-5">
-        <select id="id_type" name="type" class="form-control" disabled>
-          <option value="text">Text</option>
-          <option value="email">Email</option>
-          <option value="checkbox">Checkbox</option>
-          <option value="radio">Radio</option>
-          <option value="checkboxmultiple">Checkbox multiple</option>
-          <option value="radiomultiple">Radio multiple</option>
-          <option value="select">Select</option>
-          <option value="selectmultiple">Select multiple</option>
-        </select>
-        <p class="help-block">Create with type instead.</p>
-      </div>
+      
+      <div class="row">
+        <div class="form-group">
         
+          <label for="id_name" class="control-label col-md-1">Name</label>
+          <div class="col-md-5">
+            <input id="id_name" name="name" class="form-control" />
+          </div>
+          <label for="id_type" class="control-label col-md-1">Type</label>
+          <div class="col-md-5">
+            <select id="id_type" name="type" class="form-control" disabled>
+              <option value="text">Text</option>
+              <option value="email">Email</option>
+              <option value="checkbox">Checkbox</option>
+              <option value="radio">Radio</option>
+              <option value="checkboxmultiple">Checkbox multiple</option>
+              <option value="radiomultiple">Radio multiple</option>
+              <option value="select">Select</option>
+              <option value="selectmultiple">Select multiple</option>
+            </select>
+            <p class="help-block">Create with type instead.</p>
+          </div>
+          
+        </div>
+          
+        </div>
+        
+      <div class="row">
+        
+        <div class="form-group">
+  
+          <label for="id_groupwith" class="control-label col-md-2 text-right text-nowrap">Group with</label>
+          <div class="col-md-4">
+            <input id="id_groupwith" name="groupwith" class="form-control" />
+            <p class="help-block">Same group = same form-group.</p>
+          </div>
+
+          <label for="id_group_grid" class="control-label col-md-1">Grid</label>
+          <div class="col-md-5">
+            <div class="input-group">
+              <input id="id_group_grid" name="group_grid" class="form-control" readonly>
+              <span class="input-group-addon">G</span>
+            </div>
+          </div>
+        </div>       
+      </div>
+                            
     <fieldset class="col-md-6">
       
       <legend>Label</legend>
@@ -380,13 +407,22 @@
         </div>
     
         <div class="form-group">
-          <label for="id_classes" class="control-label">Classes</label>
+          <label for="id_label_classes" class="control-label">Classes</label>
           <div>
-            <input id="id_classes" name="classes" class="form-control">
+            <input id="id_label_classes" name="label_classes" class="form-control">
             <p class="help-block">Space separated.</p>
           </div>
         </div>
-        
+    
+        <div class="form-group">
+          <label for="id_label_grid" class="control-label">Grid</label>
+          <div>
+            <div class="input-group">
+              <input id="id_label_grid" name="label_grid" class="form-control" readonly>
+              <span class="input-group-addon">G</span>
+            </div>
+          </div>
+                
       </div>
       
     </fieldset>
@@ -404,14 +440,23 @@
         </div>
     
         <div class="form-group">
-          <label for="id_classes" class="control-label">Classes</label>
+          <label for="id_input_classes" class="control-label">Classes</label>
           <div>
-            <input id="id_classes" name="classes" class="form-control">
+            <input id="id_input_classes" name="input_classes" class="form-control">
             <p class="help-block">Space separated.</p>
           </div>
         </div>
       
-        
+    
+        <div class="form-group">
+          <label for="id_input_grid" class="control-label">Grid</label>
+          <div>
+            <div class="input-group">
+              <input id="id_input_grid" name="input_grid" class="form-control" readonly>
+              <span class="input-group-addon">G</span>
+            </div>
+          </div>
+        </div>
       
         <div class="form-group">
           <label for="id_add_on_after" class="control-label">Add on after</label>
