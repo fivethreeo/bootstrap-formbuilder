@@ -1,10 +1,10 @@
 'use strict';
 
 var gulp = require('gulp');
-require('gulp-grunt')(gulp); // add all the gruntfile tasks to gulp 
-
+var wait = require('gulp-wait');
 var gutil = require('gulp-util');
 var gh_pages = require('gulp-gh-pages');
+require('gulp-grunt')(gulp); // add all the gruntfile tasks to gulp
 
 // Allows gulp --dev to be run for a more verbose output
 var isProduction = true;
@@ -257,7 +257,13 @@ gulp.task('serve', ['connect'], function () {
         paths.images.src + '**/*'
     ]
 
-    gulp.watch(listen_globs).on('change', function() { setTimeout(livereload.changed, 1000) });
+    var delay_livereload = function(timeout) {
+      return function(vinyl) {
+        setTimeout(function() { livereload.changed(vinyl) }, timeout);
+      };
+    }
+
+    gulp.watch(listen_globs).on('change', delay_livereload(500));
     
     gulp.watch([
         'bower.json',
